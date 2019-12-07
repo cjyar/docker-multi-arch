@@ -1,3 +1,9 @@
+env:
+- VERSION=1.0
+- DOCKER_USERNAME=cjyar
+# DOCKER_PASSWORD:
+- secure: "FP/07zpY5GRfCLgWrD0S1IGo7Y8BRW/D0v5RgJhhLjj6/5D29h/eKzD0lwrYKQX5gbdMyiLfMrUYSRKd70ZNrROJs/8ZqhaGeXBsG16qr5k/eE9YrzazpLSOyMOrZwqKIcU74meVkojn7tK1DiGXqZxwabathklimn3wBhSkvCCBnk6e0oT/oXEUx5oGI0I2sy4dWuXwo47K5kHqtX0VmAxTgNg2wxzYJB+3LFJmDXGKbtHCkIt2YwJIBb5FpQvzLco+Rl1pnc2UBD/Jxk48V80dNxLKrl2xKpJT74E0khIOrSVYhXc48cVwxbe+Bnti3tGw6qeR9l6A7SfFhoVHwLVb551yZyQph9Hhp9ehUdb72rOsdRgJKaLYvTO4mU+mMdFeE57yV9pK/uTt+Z5wXFFARxP7vIgiOOWTh8zWnydZ9ciOJhB3qPMSdoVqd4iiISNgE82LQ1LBVao3fy2dZB+heixME7vXOm2bOHa3xuZ6GlX5HnSey9WNlOqu7aoaYULAHgrfqgxyJq4cBNNL8t94TgG2T81ewNNZTHly4HKa3c8zWzNWyN0zBRHcY3M+3TX0dCfKxklQC8WIBEO1ETPzE0Ow8qfwaEFXsGVv4zJFQtt6dn5tHuIpsT0Zle7KZ/8fva3ef5IntWQz8kSjJ6QY2QkQGU0Oi/EstGGEXNU="
+
 arch:
 - amd64
 - arm64
@@ -7,5 +13,10 @@ arch:
 services:
 - docker
 
+before-script:
+- echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USERNAME} --password-stdin https://docker.io
+
 script:
 - docker build -t test .
+- docker tag test cjyar/tt:${TRAVIS_CPU_ARCH}-${VERSION}
+- docker push cjyar/tt:${TRAVIS_CPU_ARCH}-${VERSION}
