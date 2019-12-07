@@ -19,7 +19,7 @@ services:
 - docker
 
 before-script:
-- echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USERNAME} --password-stdin https://docker.io
+- docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD} https://docker.io
 
 script:
 - docker build -t test .
