@@ -23,6 +23,8 @@ before-script:
 - docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD} https://docker.io
 
 script:
+- echo ${TRAVIS_CPU_ARCH}-${VERSION}
+- docker info
 - docker build -t test .
 - docker tag test cjyar/tt:${TRAVIS_CPU_ARCH}-${VERSION}
 - docker push cjyar/tt:${TRAVIS_CPU_ARCH}-${VERSION}
