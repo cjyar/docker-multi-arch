@@ -20,12 +20,18 @@ services:
 - docker
 
 before-script:
+- echo '{"experimental":"enabled"}' > ${HOME}/.docker/config.json
 - docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
 
 script:
-- echo ${TRAVIS_CPU_ARCH}-${VERSION}
-- docker info
-- cat ${HOME}/.docker/config.json
 - docker build -t test .
 - docker tag test cjyar/tt:${TRAVIS_CPU_ARCH}-${VERSION}
 - docker push cjyar/tt:${TRAVIS_CPU_ARCH}-${VERSION}
+
+jobs:
+  include:
+  - stage: deploy
+    arch: amd64
+    script:
+    - docker manifest create cjyar/tt:${VERSION} cjyar/tt:amd64-${VERSION} cjyar/tt:arm64-${VERSION} cjyar/tt:ppc64le-${VERSION} cjyar/tt:s390x-${VERSION}
+    - docker manifest push cjyar/tt:${VERSION}
