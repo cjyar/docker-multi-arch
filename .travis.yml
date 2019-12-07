@@ -20,7 +20,7 @@ services:
 - docker
 
 before-script:
-- docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD} https://docker.io
+- docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
 
 script:
 - echo ${TRAVIS_CPU_ARCH}-${VERSION}
