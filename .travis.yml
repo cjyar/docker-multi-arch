@@ -17,12 +17,18 @@ services:
 - docker
 
 before-script:
+# Enable experimental mode so we can use buildx.
 - mkdir -p ${HOME}/.docker
 - echo '{"experimental":"enabled"}' > ${HOME}/.docker/config.json
+# Set up Docker authentication.
 - docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
+# This container configures QEMU for Docker buildx.
 - docker run --privileged linuxkit/binfmt:v0.7
+# Create a new buildx builder to do multi-arch.
 - docker buildx create --driver docker-container --name multi --use
+# Get the list of platforms to build on.
 - "PLATFORMS=$(docker buildx inspect --bootstrap | egrep '^Platforms: ' | sed -e 's,Platforms: ,,' -e 's, ,,g')"
+# Convenience so we can use "docker build" instead of "docker buildx build".
 - docker buildx install
 
 script:
