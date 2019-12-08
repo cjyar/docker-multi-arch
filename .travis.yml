@@ -22,7 +22,7 @@ before-script:
 - docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
 - docker run --privileged linuxkit/binfmt:v0.7
 - docker buildx create --driver docker-container --name multi --use
-- PLATFORMS=$(docker buildx inspect --bootstrap | egrep '^Platforms: ' | sed -e 's,Platforms: ,,' -e 's, ,,g')
+- "PLATFORMS=$(docker buildx inspect --bootstrap | egrep '^Platforms: ' | sed -e 's,Platforms: ,,' -e 's, ,,g')"
 - docker buildx install
 
 script:
