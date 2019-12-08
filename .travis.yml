@@ -4,6 +4,7 @@ addons:
     - docker-xenial
     packages:
     - docker-ce
+    - qemu
 
 env:
   global:
@@ -12,12 +13,6 @@ env:
   # DOCKER_PASSWORD:
   - secure: "OcdoiywEO0wPGnMxT5inBdATlK1CfpW/UkBHn2s5xaKyCvz+zDHxxRRprrhH1uqZm0SVj6zdjTsYDseVg9++eqIFR+T5H+M6ifpW3BRkAY1CJeC+WSMA4PAMd7LdOWmRK3m9bEUNuUdlLEmZDoprSWSwvBw5gTodS8ltO8vvtm6atVUlgZ5JqA7jUbDXYr3xJykQAId2paQbUrIQnwAvXtqBv1NP7yVZP23/LzYqcSjuGgSUyV8lteqELqoRLGtLDk/6LQlcjPrnSXtPtRZZwJt4+ZcbfVdRHpPREZ2WaBITuQTS1/GaMX9g3ORj51VhbYgyx4kxJXZmEsFWMiReNopaB1XFx4PhKkpPiIkiz9flNpY5Chc2eRKQhq+ewJLP4SCqzBUP1i0Vu4xrUS8TvvTiHxdUB7tMsw5tXEw8zjzIBitquuXXxo7xEROuCTPKvc/VHHrpbEVGAu8pX0vk6mPeNqGZgW4nP6H09+AItzRavJnKwYy2DO0uPwwCUl0wpceCOanXbybY49enZ5wZqGsqgjE1v8Nj6jG0g/ja8kr/XQESLr2FqApyH5qrFw6gaXjPSfEVQk7XXLnz28TnOUN3sdb0w71snHRD+rF62VxqfYUN12ax/J+t9MsLi4hH35THreb42W3150mGmey8rg6vvlyaFBQBmpD+Rp1bniw="
 
-arch:
-- amd64
-- arm64
-- ppc64le
-- s390x
-
 services:
 - docker
 
@@ -25,15 +20,10 @@ before-script:
 - mkdir -p ${HOME}/.docker
 - echo '{"experimental":"enabled"}' > ${HOME}/.docker/config.json
 - docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
+- docker run --privileged linuxkit/binfmt:v0.7
+- docker buildx create --driver docker-container --name multi --use
+- PLATFORMS=$(docker buildx inspect --bootstrap | egrep '^Platforms: ' | sed -e 's,Platforms: ,,' -e 's, ,,g')
+- docker buildx install
 
 script:
-- docker build -t test .
-- docker tag test cjyar/tt:${TRAVIS_CPU_ARCH}-${VERSION}
-- docker push cjyar/tt:${TRAVIS_CPU_ARCH}-${VERSION}
-
-jobs:
-  include:
-  - stage: deploy
-    script:
-    - docker manifest create cjyar/tt:${VERSION} cjyar/tt:amd64-${VERSION} cjyar/tt:arm64-${VERSION} cjyar/tt:ppc64le-${VERSION} cjyar/tt:s390x-${VERSION}
-    - docker manifest push cjyar/tt:${VERSION}
+- docker build -t cjyar/tt:${VERSION} --push --platform ${PLATFORMS} .
