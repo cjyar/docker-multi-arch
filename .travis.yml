@@ -1,7 +1,9 @@
 addons:
   apt:
+    sources:
+    - docker-xenial
     packages:
-    - docker.io
+    - docker-ce
 
 env:
   global:
