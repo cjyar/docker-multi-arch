@@ -7,3 +7,7 @@ to the same repository, using a tag with the architecture name embedded in it.
 
 A final build step creates a manifest list, aka fat image, aka multi-architecture image. That final product gets pushed
 to the same repository as the per-architecture images.
+
+# Alternatives
+
+Check the other branches of this repo for other ways to do the same thing.
