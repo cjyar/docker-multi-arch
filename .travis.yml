@@ -29,8 +29,8 @@ before-script:
 script:
 # Build on this architecture, then tag and push this image.
 - docker build -t test .
-- docker tag test cjyar/tt:${TRAVIS_CPU_ARCH}-${VERSION}
-- docker push cjyar/tt:${TRAVIS_CPU_ARCH}-${VERSION}
+- docker tag test cjyar/docker-multi-arch:${TRAVIS_CPU_ARCH}-${VERSION}
+- docker push cjyar/docker-multi-arch:${TRAVIS_CPU_ARCH}-${VERSION}
 
 # This deploy stage only runs once, skipping the build matrix.
 jobs:
@@ -38,5 +38,5 @@ jobs:
   - stage: deploy
     script:
     # Create the manifest list which ties together all the images from the different architectures.
-    - docker manifest create cjyar/tt:${VERSION} cjyar/tt:amd64-${VERSION} cjyar/tt:arm64-${VERSION} cjyar/tt:ppc64le-${VERSION} cjyar/tt:s390x-${VERSION}
-    - docker manifest push cjyar/tt:${VERSION}
+    - docker manifest create cjyar/docker-multi-arch:${VERSION} cjyar/docker-multi-arch:amd64-${VERSION} cjyar/docker-multi-arch:arm64-${VERSION} cjyar/docker-multi-arch:ppc64le-${VERSION} cjyar/docker-multi-arch:s390x-${VERSION}
+    - docker manifest push cjyar/docker-multi-arch:${VERSION}
