@@ -32,4 +32,4 @@ before-script:
 - docker buildx install
 
 script:
-- docker build -t cjyar/tt:${VERSION} --push --platform ${PLATFORMS} .
+- docker build -t cjyar/docker-multi-arch:${VERSION} --push --platform ${PLATFORMS} .
