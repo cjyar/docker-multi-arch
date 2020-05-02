@@ -10,6 +10,7 @@ jobs:
       uses: ilteoood/docker_buildx@v1.0.2
       with:
         publish: true
-        imageName: cjyar/docker-multi-arch:actions-buildx
+        imageName: cjyar/docker-multi-arch
+        tag: actions-buildx
         dockerHubUser: cjyar
         dockerHubPassword: ${{ secrets.DOCKER_PASSWORD }}
