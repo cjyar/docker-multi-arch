@@ -1,0 +1,13 @@
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build image job
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build and publish image
+      uses: ilteoood/docker_buildx@v1.0.2
+      with:
+        publish: true
+        imageName: cjyar/docker-multi-arch:${{ github.ref }}
+        dockerHubUser: cjyar
+        dockerHubPassword: ${{ secrets.DOCKER_PASSWORD }}
